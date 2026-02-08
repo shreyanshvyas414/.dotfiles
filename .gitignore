@@ -1,0 +1,17 @@
+# OS Files
+.DS_Store
+
+# Neovim
+nvim/lazy-lock.json
+nvim/.netrwhist
+
+# Zsh
+zsh/.zcompdump*
+zsh/.zsh_history
+
+# Secrets (NEVER commit these!)
+**/secrets.zsh
+**/.env
+
+# Backups
+*.backup

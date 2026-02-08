@@ -1,0 +1,6 @@
+[user]
+  email = "vyasshreyansh71@gmail.com"
+  name = "Shreyansh Vyas"
+
+[core]
+  editor = nvim
