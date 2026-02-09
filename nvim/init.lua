@@ -14,6 +14,10 @@ vim.opt.showmode = false
 vim.opt.scrolloff = 5
 vim.opt.wrap = false
 vim.opt.termguicolors = true
+vim.opt.winborder = "rounded"
+vim.cmd([[hi @lsp.type.number gui=italic]])
+vim.cmd([[set noswapfile]])
+
 
 -- Tabs & indentation
 vim.opt.expandtab = true
@@ -128,6 +132,14 @@ vim.pack.add({
   -- Web dev icons
   { src = "https://github.com/nvim-tree/nvim-web-devicons" },
 
+  -- Rainbow delimiters
+  { src = "https://github.com/HiPhish/rainbow-delimiters.nvim" },
+
+  -- Markdown
+  {
+    src = "https://github.com/selimacerbas/markdown-preview.nvim",
+    build = "cd app && npm install",
+  },
 })
 
 
@@ -165,7 +177,32 @@ vim.keymap.set("n", "<leader>pu", pack_update, { desc = "Pack: update plugins" }
 
 
 local plugins = {
+  ["markdown-preview"] = {
+    no_require = true,
+    config = function()
+      vim.g.mkdp_port = "2001"
+      vim.g.mkdp_auto_start = 0
+    end,
+  },
+
+  ["rainbow-delimiters"] = {
+    no_require = true,
+    config = function()
+      vim.g.rainbow_delimiters = {
+        highlight = {
+          "RainbowDelimiterYellow",
+          "RainbowDelimiterViolet",
+          "RainbowDelimiterBlue",
+        },
+      }
+    end,
+  },
+  ["marks"] = {
+    module = "marks",
+    config = { builtin_marks = { "<", ">", "^" }, },
+  },
   ["oil"] = {
+    module = "oil",
     config = {
       lsp_file_methods = {
         enabled = true,
@@ -181,6 +218,7 @@ local plugins = {
     },
   },
   ["lite-ui"] = {
+    module = "lite-ui",
     config = {
       input = {
         auto_detect_word = true,
@@ -188,6 +226,7 @@ local plugins = {
     },
   },
   ["conform"] = {
+    module = "conform",
     config = {
       formatters_by_ft = {
         lua = { "stylua" },
@@ -198,9 +237,10 @@ local plugins = {
       },
     }
   },
-  ["mason"] = { config = {} },
-  ["ts-node-select"] = { config = {} },
+  ["mason"] = { module = "mason", config = {} },
+  ["ts-node-select"] = { module = "ts-node-select", config = {} },
   ["nvim-treesitter.config"] = {
+    module = "nvim-treesitter.config",
     config = {
       ensure_installed = { "lua", "vim", "vimdoc", "python" },
       auto_install = true,
@@ -213,11 +253,12 @@ local plugins = {
       },
     },
   },
-  ["mini.pick"] = { config = {} },
-  ["which-key"] = { config = {} },
-  ["nvim-autopairs"] = { config = {} },
-  ["gitsigns"] = { config = {} },
+  ["mini.pick"] = { module = "mini.pick", config = {} },
+  ["which-key"] = { module = "which-key", config = {} },
+  ["nvim-autopairs"] = { module = "nvim-autopairs", config = {} },
+  ["gitsigns"] = { module = "gitsigns", config = {} },
   ["nvim-web-devicons"] = {
+    module = "nvim-web-devicons",
     config = {
       color_icons = true,
       variant = "light|dark",
@@ -229,9 +270,16 @@ local plugins = {
 }
 
 -- Automate config
-for name, spec in pairs(plugins) do
-  if spec.config then
-    require(name).setup(spec.config)
+for _, spec in pairs(plugins) do
+  if spec.no_require then
+    if type(spec.config) == "function" then
+      spec.config()
+    end
+  else
+    local ok, mod = pcall(require, spec.module)
+    if ok and spec.config then
+      mod.setup(spec.config)
+    end
   end
 end
 
@@ -253,6 +301,17 @@ vim.diagnostic.config({
   underline = true,
   update_in_insert = false,
 })
+
+
+-- Rainbow delimiters
+vim.g.rainbow_delimiters = {
+  highlight = {
+    "RainbowDelimiterYellow",
+    "RainbowDelimiterViolet",
+    "RainbowDelimiterBlue",
+  },
+}
+
 
 
 
