@@ -121,6 +121,13 @@ vim.pack.add({
 
   -- Git signs
   { src = "https://github.com/lewis6991/gitsigns.nvim" },
+
+  -- Marks.nvim
+  { src = "https://github.com/chentoast/marks.nvim" },
+
+  -- Web dev icons
+  { src = "https://github.com/nvim-tree/nvim-web-devicons" },
+
 })
 
 
@@ -156,67 +163,77 @@ vim.keymap.set("n", "<leader>pu", pack_update, { desc = "Pack: update plugins" }
 
 -- PLUGIN CONFIGURATIONS
 
--- Oil
-require("oil").setup({
-  lsp_file_methods = {
-    enabled = true,
-    timeout_ms = 1000,
-    autosave_changes = true,
+
+local plugins = {
+  ["oil"] = {
+    config = {
+      lsp_file_methods = {
+        enabled = true,
+        timeout_ms = 1000,
+        autosave_changes = true,
+      },
+      columns = { "icon" },
+      float = {
+        max_width = 0.3,
+        max_height = 0.6,
+        border = "rounded",
+      },
+    },
   },
-  columns = { "icon" },
-  float = {
-    max_width = 0.3,
-    max_height = 0.6,
-    border = "rounded",
+  ["lite-ui"] = {
+    config = {
+      input = {
+        auto_detect_word = true,
+      },
+    },
   },
-})
-
--- Lite UI
-require("lite-ui").setup({
-  input = { auto_detect_word = true },
-})
-
--- Conform
-require("conform").setup({
-  formatters_by_ft = {
-    lua = { "stylua" },
+  ["conform"] = {
+    config = {
+      formatters_by_ft = {
+        lua = { "stylua" },
+      },
+      format_on_save = {
+        timeout_ms = 500,
+        lsp_format = "fallback",
+      },
+    }
   },
-  format_on_save = {
-    timeout_ms = 500,
-    lsp_format = "fallback",
+  ["mason"] = { config = {} },
+  ["ts-node-select"] = { config = {} },
+  ["nvim-treesitter.config"] = {
+    config = {
+      ensure_installed = { "lua", "vim", "vimdoc", "python" },
+      auto_install = true,
+      highlight = {
+        enable = true,
+        additional_vim_regex_highlighting = false,
+      },
+      indent = {
+        enable = true,
+      },
+    },
   },
-})
-
--- Mason
-require("mason").setup()
-
--- TS node select
-require("ts-node-select").setup()
-
--- Treesitter
-require("nvim-treesitter.config").setup({
-  ensure_installed = { "lua", "vim", "vimdoc", "python" },
-  auto_install = true,
-  highlight = {
-    enable = true,
-    additional_vim_regex_highlighting = false,
+  ["mini.pick"] = { config = {} },
+  ["which-key"] = { config = {} },
+  ["nvim-autopairs"] = { config = {} },
+  ["gitsigns"] = { config = {} },
+  ["nvim-web-devicons"] = {
+    config = {
+      color_icons = true,
+      variant = "light|dark",
+      strict = true,
+      default = true,
+      blend = 0
+    },
   },
-  indent = {
-    enable = true,
-  },
-})
+}
 
--- Mini.pick
-require("mini.pick").setup()
-
--- Which-key
-require("which-key").setup({})
-
--- Autopairs
-require("nvim-autopairs").setup({})
-
--- Gitsigns
-require("gitsigns").setup()
+-- Automate config
+for name, spec in pairs(plugins) do
+  if spec.config then
+    require(name).setup(spec.config)
+  end
+end
 
 
 -- DIAGNOSTICS
