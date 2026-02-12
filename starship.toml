@@ -1,0 +1,133 @@
+# Global Format
+format = "$username$directory$git_branch$git_status$fill$c$golang$java$nodejs$rust$python$cmd_duration\n$character"
+add_newline = false
+palette = "catppuccin_mocha"
+
+
+# Palette
+[palettes.catppuccin_mocha]
+rosewater = "#f5e0dc"
+flamingo = "#f2cdcd"
+pink = "#f5c2e7"
+mauve = "#cba6f7"
+red = "#f38ba8"
+maroon = "#eba0ac"
+peach = "#fab387"
+yellow = "#f9e2af"
+green = "#a6e3a1"
+teal = "#94e2d5"
+sky = "#89dceb"
+sapphire = "#74c7ec"
+blue = "#89b4fa"
+lavender = "#b4befe"
+text = "#cdd6f4"
+subtext1 = "#bac2de"
+subtext0 = "#a6adc8"
+overlay2 = "#9399b2"
+overlay1 = "#7f849c"
+overlay0 = "#6c7086"
+surface2 = "#585b70"
+surface1 = "#45475a"
+surface0 = "#313244"
+base = "#1e1e2e"
+mantle = "#181825"
+crust = "#11111b"
+
+# Character
+[character]
+vimcmd_symbol = "[NORMAL ❯](sapphire)"
+success_symbol = "[❯](yellow)"
+
+# AWS
+[aws]
+symbol = "🅰 "
+
+# GCloud
+[gcloud]
+format = "on [$symbol$active($region)]($style) "
+symbol = "🅶 ️"
+
+# Directory
+[directory]
+format = "[ $path ]($style)"
+style = "fg:yellow"
+truncation_length = 3
+truncation_symbol = "…/"
+
+[directory.substitutions]
+Documents = "󰈙"
+Downloads = " "
+Music = " "
+Pictures = " "
+
+# Fill
+[fill]
+style = "fg:yellow"
+symbol = " "
+
+# Git Branch
+[git_branch]
+format = "[ $symbol $branch ]($style)"
+style = "fg:sapphire"
+symbol = ""
+
+# Git Status
+[git_status]
+disabled = false
+format = "[$all_status$ahead_behind]($style)"
+style = "subtext1"
+up_to_date = "[✓](green)"
+untracked = "[?($count)](peach)"
+modified = "[!($count)](yellow)"
+staged = "[+$count](teal)"
+renamed = "[»($count)](lavender)"
+deleted = "[✘($count)](red)"
+stashed = "[≡](mauve)"
+ahead = "[⇡($count)](sapphire)"
+behind = "[⇣($count)](maroon)"
+diverged = "[⇕ ⇡($ahead_count) ⇣($behind_count)](pink)"
+
+
+# Time
+[cmd_duration]
+min_time = 0
+format = '[󰪢 $duration](bold fg:yellow)'
+
+# Username
+[username]
+disabled = false
+format = "[$user]($style)"
+show_always = true
+style_root = "red"
+style_user = "mauve"
+
+# Language Modules
+[c]
+format = " [$symbol$version]($style)"
+style = "blue"
+symbol = " "
+
+[golang]
+format = " [$symbol$version]($style)"
+style = "sky"
+symbol = " "
+
+[java]
+format = " [$symbol$version]($style)"
+style = "red"
+symbol = " "
+
+[nodejs]
+format = " [$symbol$version]($style)"
+style = "green"
+symbol = "󰎙 "
+
+[rust]
+format = " [$symbol$version]($style)"
+style = "peach"
+symbol = " "
+
+[python]
+format = " [$symbol$version]($style)"
+style = "yellow"
+symbol = " "
