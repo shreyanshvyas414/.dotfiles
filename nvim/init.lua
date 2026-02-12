@@ -89,6 +89,16 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 })
 
 
+vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
+  group = vim.api.nvim_create_augroup("ColorizerAutoAttach", { clear = true }),
+  callback = function(args)
+    local ok, colorizer = pcall(require, "colorizer")
+    if ok then
+      colorizer.attach_to_buffer(args.buf)
+    end
+  end,
+})
+
 -- PLUGIN MANAGEMENT
 
 vim.pack.add({
@@ -140,10 +150,46 @@ vim.pack.add({
     src = "https://github.com/selimacerbas/markdown-preview.nvim",
     build = "cd app && npm install",
   },
+
+  -- Rust
+  { src = "https://github.com/mrcjkb/rustaceanvim",        version = "v7.1.9" },
+
+  -- Colorizer
+  { src = "https://github.com/catgoose/nvim-colorizer.lua" }
 })
 
 
 -- vim.pack Helpers
+local function pack_remove()
+  local name = vim.fn.input("Plugin name to remove: ")
+
+  if name == "" then
+    vim.notify("No plugin name provided.", vim.log.levels.WARN)
+    return
+  end
+
+  for _, plugin in ipairs(vim.pack.get()) do
+    if plugin.spec.name == name then
+      if plugin.active then
+        vim.notify(
+          "Plugin is currently active. Remove it from init.lua and restart before deleting.",
+          vim.log.levels.ERROR
+        )
+        return
+      end
+
+      if vim.fn.confirm("Remove plugin '" .. name .. "'?", "&Yes\n&No", 2) == 1 then
+        vim.pack.del({ name })
+        vim.notify("Removed plugin: " .. name, vim.log.levels.INFO)
+      end
+
+      return
+    end
+  end
+
+  vim.notify("Plugin not found: " .. name, vim.log.levels.ERROR)
+end
+
 
 local function pack_clean()
   local unused = {}
@@ -169,6 +215,7 @@ local function pack_update()
   vim.pack.update()
 end
 
+vim.keymap.set("n", "<leader>pr", pack_remove, { desc = "Pack: remove plugin" })
 vim.keymap.set("n", "<leader>pc", pack_clean, { desc = "Pack: clean unused plugins" })
 vim.keymap.set("n", "<leader>pu", pack_update, { desc = "Pack: update plugins" })
 
@@ -177,6 +224,14 @@ vim.keymap.set("n", "<leader>pu", pack_update, { desc = "Pack: update plugins" }
 
 
 local plugins = {
+  ["colorizer"] = {
+    config = {}
+  },
+  ["rustaceanvim"] = {
+    config = {
+      lazy = false,
+    }
+  },
   ["markdown-preview"] = {
     no_require = true,
     config = function()
@@ -211,8 +266,8 @@ local plugins = {
       },
       columns = { "icon" },
       float = {
-        max_width = 0.3,
-        max_height = 0.6,
+        -- max_width = 0.3,
+        -- max_height = 0.6,
         border = "rounded",
       },
     },
@@ -311,8 +366,6 @@ vim.g.rainbow_delimiters = {
     "RainbowDelimiterBlue",
   },
 }
-
-
 
 
 -- LSP SETUP
