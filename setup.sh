@@ -21,7 +21,7 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     -nt|--no-tools) INSTALL_TOOLS=false; shift ;;
     --dry-run) DRY_RUN=true; shift ;;
-    -h|--help) 
+    -h|--help)
       echo "Usage: ./setup.sh [--no-tools] [--dry-run]"
       exit 0 ;;
     *) shift ;;
@@ -43,23 +43,27 @@ echo ""
 # Install tools (macOS)
 if $INSTALL_TOOLS && [[ "$OSTYPE" == "darwin"* ]]; then
   log "Installing tools via Homebrew..."
-  
+
   if ! command -v brew &>/dev/null; then
     log "Installing Homebrew..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   fi
-  
-  tools=(tmux neovim fzf ripgrep fd git alacritty node)
+
+  tools=(tmux neovim fzf ripgrep fd git alacritty bob node starship)
+
   for tool in "${tools[@]}"; do
     if ! command -v "$tool" &>/dev/null; then
-      run brew install "$tool" 2>/dev/null || run brew install --cask "$tool" 2>/dev/null || true
+      log "Installing $tool..."
+      if ! run brew install "$tool"; then
+        run brew install --cask "$tool" || warn "Failed to install $tool"
+      fi
     fi
   done
-  
-  # Install font
+
+  # Nerd Font
   run brew tap homebrew/cask-fonts
-  run brew install --cask font-fira-code-nerd-font 2>/dev/null || true
-  
+  run brew install --cask font-fira-code-nerd-font || true
+
   success "Tools installed"
   echo ""
 fi
@@ -72,73 +76,90 @@ run mkdir -p "$HOME/.config/nvim"
 run mkdir -p "$HOME/.config/zsh"
 run mkdir -p "$HOME/Scripts"
 
-# Install configs
+# Symlink helper
 install() {
   local src="$1"
   local dest="$2"
   local name="$3"
-  
+
   if [[ ! -e "$src" ]]; then
     warn "Not found: $src"
     return
   fi
-  
-  # Backup existing
-  if [[ -e "$dest" ]] && [[ ! -L "$dest" ]]; then
-    run mv "$dest" "$dest.backup"
+
+  # Backup existing real files
+  if [[ -e "$dest" && ! -L "$dest" ]]; then
+    run mv "$dest" "$dest.backup.$(date +%s)"
   fi
-  
+
   # Remove old symlink
   [[ -L "$dest" ]] && run rm "$dest"
-  
-  # Create symlink
+
   run ln -sf "$src" "$dest"
   success "$name"
 }
 
 log "Linking configs..."
 
-# Alacritty
-install "$DOTFILES/alacritty/alacritty.conf" "$HOME/.config/alacritty/alacritty.conf" "Alacritty"
+install "$DOTFILES/alacritty/alacritty.conf" \
+        "$HOME/.config/alacritty/alacritty.conf" \
+        "Alacritty"
 
-# Git
-install "$DOTFILES/git/.gitconfig" "$HOME/.gitconfig" "Git"
+install "$DOTFILES/git/.gitconfig" \
+        "$HOME/.gitconfig" \
+        "Git"
 
-# Tmux
-install "$DOTFILES/tmux/.tmux.conf" "$HOME/.config/tmux/.tmux.conf" "Tmux"
+install "$DOTFILES/tmux/.tmux.conf" \
+        "$HOME/.config/tmux/.tmux.conf" \
+        "Tmux"
 
-# Neovim
-install "$DOTFILES/nvim" "$HOME/.config/nvim" "Neovim"
+install "$DOTFILES/nvim" \
+        "$HOME/.config/nvim" \
+        "Neovim"
 
-# Zsh
-install "$DOTFILES/zsh" "$HOME/.config/zsh" "Zsh config"
+install "$DOTFILES/zsh" \
+        "$HOME/.config/zsh" \
+        "Zsh config"
 
-# Create .zshrc if it doesn't exist
+install "$DOTFILES/starship/starship.toml" \
+        "$HOME/.config/starship.toml" \
+        "Starship"
+
+# .zshrc Setup
 if [[ ! -f "$HOME/.zshrc" ]]; then
   log "Creating .zshrc..."
+
   cat > "$HOME/.zshrc" <<'ZSHRC'
 # Auto-start tmux (Alacritty only)
-if command -v tmux &> /dev/null && [ -z "$TMUX" ]; then
-    if [ "$TERM_PROGRAM" = "alacritty" ] || [ "$ALACRITTY_SOCKET" ]; then
-        if ! tmux has-session -t main 2>/dev/null; then
-            tmux new-session -d -s main
-        fi
-        exec tmux attach -t main
+if command -v tmux &>/dev/null && [ -z "$TMUX" ]; then
+  if [ "$TERM_PROGRAM" = "alacritty" ] || [ "$ALACRITTY_SOCKET" ]; then
+    if ! tmux has-session -t main 2>/dev/null; then
+      tmux new-session -d -s main
     fi
+    exec tmux attach -t main
+  fi
 fi
 
-# Load zsh config
+# Modular Zsh config
 ZSH_CONFIG="$HOME/.config/zsh"
-[[ -f "$ZSH_CONFIG/env.zsh" ]] && source "$ZSH_CONFIG/env.zsh"
-[[ -f "$ZSH_CONFIG/cache.zsh" ]] && source "$ZSH_CONFIG/cache.zsh"
-[[ -f "$ZSH_CONFIG/aliases.zsh" ]] && source "$ZSH_CONFIG/aliases.zsh"
-[[ -f "$ZSH_CONFIG/completion.zsh" ]] && source "$ZSH_CONFIG/completion.zsh"
-[[ -f "$ZSH_CONFIG/history.zsh" ]] && source "$ZSH_CONFIG/history.zsh"
-[[ -f "$ZSH_CONFIG/options.zsh" ]] && source "$ZSH_CONFIG/options.zsh"
-[[ -f "$ZSH_CONFIG/keybinds.zsh" ]] && source "$ZSH_CONFIG/keybinds.zsh"
-[[ -f "$ZSH_CONFIG/prompt.zsh" ]] && source "$ZSH_CONFIG/prompt.zsh"
+for file in env cache aliases completion history options keybinds; do
+  [[ -f "$ZSH_CONFIG/$file.zsh" ]] && source "$ZSH_CONFIG/$file.zsh"
+done
+
+# Starship prompt
+if command -v starship &>/dev/null; then
+  eval "$(starship init zsh)"
+fi
 ZSHRC
+
   success ".zshrc created"
+else
+  # Ensure starship init exists
+  if ! grep -q "starship init zsh" "$HOME/.zshrc"; then
+    log "Adding Starship init to existing .zshrc..."
+    echo -e '\n# Starship prompt\nif command -v starship &>/dev/null; then\n  eval "$(starship init zsh)"\nfi' >> "$HOME/.zshrc"
+    success "Starship added to .zshrc"
+  fi
 fi
 
 # Scripts
@@ -153,15 +174,15 @@ if [[ -d "$DOTFILES/Scripts" ]]; then
   success "Scripts"
 fi
 
-# Neovim setup
+# Neovim Setup
 if command -v nvim &>/dev/null && ! $DRY_RUN; then
   log "Installing Neovim plugins..."
-  nvim --headless "+Lazy! sync" +qa 2>/dev/null || true
+  nvim --headless "+Lazy! sync" +qa || true
   success "Neovim plugins installed"
 fi
 
 echo ""
-success "Done! "
+success "Done!"
 echo ""
 log "Next steps:"
 echo "  1. Restart terminal: exec zsh"
