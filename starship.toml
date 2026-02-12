@@ -52,7 +52,9 @@ symbol = "🅶 ️"
 format = "[ $path ]($style)"
 style = "fg:yellow"
 truncation_length = 3
+truncate_to_repo = true
 truncation_symbol = "…/"
+fish_style_pwd_dir_length = 1
 
 [directory.substitutions]
 Documents = "󰈙"
@@ -103,27 +105,27 @@ style_user = "mauve"
 
 # Language Modules
 [c]
-format = " [$symbol$version]($style)"
+format = " [$symbol$version]($style) "
 style = "blue"
 symbol = " "
 
 [golang]
-format = " [$symbol$version]($style)"
+format = " [$symbol$version]($style) "
 style = "sky"
 symbol = " "
 
 [java]
-format = " [$symbol$version]($style)"
+format = " [$symbol$version]($style) "
 style = "red"
 symbol = " "
 
 [nodejs]
-format = " [$symbol$version]($style)"
+format = " [$symbol$version]($style) "
 style = "green"
 symbol = "󰎙 "
 
 [rust]
-format = " [$symbol$version]($style)"
+format = " [$symbol$version]($style) "
 style = "peach"
 symbol = " "
 
