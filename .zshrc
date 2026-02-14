@@ -16,6 +16,8 @@ fi
 # Paths
 export PATH="$HOME/.local/share/bob/nvim-bin:$HOME/.local/bin:$PATH"
 
+export ZATHURA_PLUGIN_PATH="$(brew --prefix)/opt/zathura/lib/zathura"
+
 # Homebrew
 if [[ -x /opt/homebrew/bin/brew ]]; then
   eval "$(/opt/homebrew/bin/brew shellenv)"
@@ -89,6 +91,7 @@ alias rf='rm -rf'
 alias t='touch'
 alias mkd='mkdir'
 alias hs='history'
+alias cat="bat"
 
 # Editors
 alias vi='nvim'
@@ -173,14 +176,65 @@ if command -v fnm >/dev/null 2>&1; then
   eval "$(fnm env --use-on-cd --shell zsh)"
 fi
 
-# Starship
-export STARSHIP_CONFIG="$HOME/.config/starship.toml"
-eval "$(starship init zsh)"
+# Prompt #
+setopt PROMPT_SUBST
 
-enable_transience() {
-  emulate -L zsh
-  starship_transient_prompt_func() {
-    starship module character
-  }
+MAGENTA='%F{13}'
+YELLOW='%F{222}'
+CYAN='%F{109}'
+GREEN='%F{108}'
+RED='%F{9}'
+GRAY='%F{222}'
+RESET='%f'
+
+dir_color() {
+  if [[ $? -ne 0 ]]; then
+    echo "$RED"
+    return
+  fi
+  git rev-parse --is-inside-work-tree &>/dev/null && echo "$CYAN" || echo "$YELLOW"
 }
 
+git_prompt() {
+  local branch
+  branch=$(git symbolic-ref --short HEAD 2>/dev/null)
+  if [[ -n $branch ]]; then
+    echo " ${GRAY} ${GREEN}$branch${RESET}"
+  fi
+}
+
+arrow_color() {
+  git rev-parse --is-inside-work-tree &>/dev/null && echo "$CYAN" || echo "$GRAY"
+}
+
+time_color() {
+  echo "$YELLOW"
+}
+
+PROMPT='${MAGENTA}%n ${GRAY}in $(dir_color)%2~${RESET}$(git_prompt)
+$(arrow_color)$ ${RESET}'
+
+# Uncomment if you want right prompt time
+# RPROMPT='$(time_color)%D{%I:%M %p}${RESET}'
+
+
+
+# Starship
+# export STARSHIP_CONFIG="$HOME/.config/starship.toml"
+# eval "$(starship init zsh)"
+#
+# enable_transience() {
+#   emulate -L zsh
+#   starship_transient_prompt_func() {
+#     starship module character
+#   }
+# }
+
+
+# defaults write com.apple.dock autohide -bool true
+# defaults write com.apple.Dock autohide -bool true
+# defaults write com.apple.Dock autohide-delay -float 1000
+# defaults write com.apple.universalaccess reduceMotion -bool true
+#
+# killall SystemUIServer
+# killall Dock
