@@ -211,46 +211,36 @@ precmd() {
   CMD_START_MS=0
 }
 
-
-MAGENTA='%F{13}'
-YELLOW='%F{222}'
-CYAN='%F{109}'
-GREEN='%F{108}'
-RED='%F{9}'
-GRAY='%F{222}'
-RESET='%f'
-
-
 dir_color() {
   if [[ $? -ne 0 ]]; then
-    echo "$RED"
+    echo "%F{9}"
     return
   fi
-  git rev-parse --is-inside-work-tree &>/dev/null && echo "$CYAN" || echo "$YELLOW"
+  git rev-parse --is-inside-work-tree &>/dev/null && echo "%F{109}" || echo "%F{222}"
 }
 
 git_prompt() {
   local branch
   branch=$(git symbolic-ref --short HEAD 2>/dev/null)
   if [[ -n $branch ]]; then
-    echo " ${GRAY} ${GREEN}$branch${RESET}"
+    echo " %F{222} %F{108}$branch%f"
   fi
 }
 
 arrow_color() {
-  git rev-parse --is-inside-work-tree &>/dev/null && echo "$CYAN" || echo "$GRAY"
+  git rev-parse --is-inside-work-tree &>/dev/null && echo "%F{108}" || echo "%F{222}"
 }
+
+PROMPT='%F{13}%n %F{222}in $(dir_color)%2~%f$(git_prompt)
+$(arrow_color)$ %f'
 
 time_color() {
-  echo "$YELLOW"
+  echo "%F{222}"
 }
-
-PROMPT='${MAGENTA}%n ${GRAY}in $(dir_color)%2~${RESET}$(git_prompt)
-$(arrow_color)$ ${RESET}'
 
 # Uncomment if you want right prompt time
 RPROMPT='${CMD_DURATION}'
-# RPROMPT='$(time_color)%D{%I:%M %p}${RESET}'
+# RPROMPT='%F{222}%D{%I:%M %p}%f'
 
 
 
