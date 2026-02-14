@@ -179,6 +179,39 @@ fi
 # Prompt #
 setopt PROMPT_SUBST
 
+# Duration
+zmodload zsh/datetime
+typeset -gi CMD_START_MS=0
+typeset -g CMD_DURATION=""
+
+preexec() {
+  CMD_START_MS=$(( EPOCHREALTIME * 1000 ))
+}
+
+precmd() {
+  (( CMD_START_MS == 0 )) && return
+  local end_ms=$(( EPOCHREALTIME * 1000 ))
+  local duration_ms=$(( end_ms - CMD_START_MS ))
+  
+  duration_ms=${duration_ms%.*}
+  
+  if (( duration_ms > 60000 )); then
+    local mins=$((duration_ms / 60000))
+    local secs=$(((duration_ms % 60000) / 1000))
+    if (( secs > 0 )); then
+      CMD_DURATION="%F{178}${mins}m${secs}s%f"
+    else
+      CMD_DURATION="%F{178}${mins}m%f"
+    fi
+  elif (( duration_ms > 1000 )); then
+    CMD_DURATION="%F{178}$((duration_ms / 1000))s%f"
+  else
+    CMD_DURATION=""
+  fi
+  CMD_START_MS=0
+}
+
+
 MAGENTA='%F{13}'
 YELLOW='%F{222}'
 CYAN='%F{109}'
@@ -186,6 +219,7 @@ GREEN='%F{108}'
 RED='%F{9}'
 GRAY='%F{222}'
 RESET='%f'
+
 
 dir_color() {
   if [[ $? -ne 0 ]]; then
@@ -215,6 +249,7 @@ PROMPT='${MAGENTA}%n ${GRAY}in $(dir_color)%2~${RESET}$(git_prompt)
 $(arrow_color)$ ${RESET}'
 
 # Uncomment if you want right prompt time
+RPROMPT='${CMD_DURATION}'
 # RPROMPT='$(time_color)%D{%I:%M %p}${RESET}'
 
 
@@ -238,3 +273,4 @@ $(arrow_color)$ ${RESET}'
 #
 # killall SystemUIServer
 # killall Dock
+
