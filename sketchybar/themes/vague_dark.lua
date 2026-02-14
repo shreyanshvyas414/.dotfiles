@@ -1,0 +1,31 @@
+-- Vague Dark (Neutral, Soft, Premium)
+
+return {
+  peach     = 0xffe59b5f,
+  mauve     = 0xff8a84e2,
+  grey      = 0xff6b6f82,
+  rosewater = 0xffc47a6a,
+  flamingo  = 0xffc06a6a,
+  pink      = 0xffc77dbb,
+  red       = 0xffd16d7a,
+  maroon    = 0xffc05a65,
+  yellow    = 0xffe6b450, -- signature warm yellow
+  green     = 0xff7fbf7a,
+  teal      = 0xff5fa3a6,
+  sky       = 0xff5ca9d6,
+  sapphire  = 0xff4f97b8,
+  blue      = 0xff6c8ed9,
+  lavender  = 0xff9aa0ff,
+  text      = 0xffd4d7e3,
+  subtext1  = 0xffb6bac8,
+  subtext0  = 0xff9a9fb2,
+  overlay2  = 0xff80859a,
+  overlay1  = 0xff6e7387,
+  overlay0  = 0xff5c6073,
+  surface2  = 0xff44485c,
+  surface1  = 0xff383c4f,
+  surface0  = 0xff2c3042,
+  base      = 0xff1f2230,
+  mantle    = 0xff1a1d2a,
+  crust     = 0xff151823,
+}
