@@ -1,4 +1,4 @@
-;; My Kanata Configuration
+;; Kanata Configuration
 ;; Caps Lock as Hyper key for navigation and app launching
 
 (defcfg
@@ -16,7 +16,7 @@
   lctl lalt lmet           spc            rmet ralt
 )
 
-;; Base layer - default state
+;; Base layer
 (deflayer base
   grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
   tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
@@ -25,45 +25,35 @@
   lctl lalt lmet           spc            rmet ralt
 )
 
-;; Navigation layer - hold Caps to activate
-;; Top row: Apps (browsers, terminal, file manager)
-;; Home row: Arrow keys (ASDFJKL), lock screen
-;; Bottom row: Development and productivity apps
+;; Navigation layer
 (deflayer nav
   _    f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12  _
-  _    @ala @saf @fir @tor _    _    _    _    @oil _    _    _    _
-  _    lft  down up   rght _    lft  down up   rght @lck _    _
-  _    @xco @txt @trm @nvim @not @rem @mail @pas @set @clr _    _
-  _    _    _              _              _    _
+  _    @ala @saf @fir @tor _    _    _    _    _    _    _    _    _
+  _    lft  down up   rght _    lft  down up   rght _    _    _
+  _    @xco @txt @trm @vim @not @rem @mail @pas @set @clr _
+  _    _    _              spc            _    _
 )
 
-;; Aliases - Caps Lock behavior and app launchers
+;; Aliases
 (defalias
-  ;; Caps: tap for Esc, hold for nav layer
   cap (tap-hold-release 200 200 esc (layer-while-held nav))
   
-  ;; Browsers and terminal
   ala (cmd open -a Alacritty)
   saf (cmd open -a Safari)
   fir (cmd open -a Firefox)
   tor (cmd open -a "Tor Browser")
   trm (cmd open -a Terminal)
   
-  ;; Development
   xco (cmd open -a Xcode)
   txt (cmd open -a TextEdit)
-  nvim (cmd osascript -e 'tell application "Alacritty" to activate' -e 'tell application "System Events" to keystroke "nvim
-"')
-  oil (cmd osascript -e 'tell application "Alacritty" to activate' -e 'tell application "System Events" to keystroke "-"')
+  vim (cmd open -a Alacritty)
   
-  ;; Productivity
   not (cmd open -a Notes)
   rem (cmd open -a Reminders)
   mail (cmd open -a Mail)
   pas (cmd open -a Passwords)
   
-  ;; System
   set (cmd open -a "System Settings")
-  lck (cmd pmset displaysleepnow)
   clr (cmd open -a AppCleaner)
 )
+
