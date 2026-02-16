@@ -1,6 +1,30 @@
 [user]
-  email = "vyasshreyansh71@gmail.com"
-  name = "Shreyansh Vyas"
+    email = "vyasshreyansh71@gmail.com"
+    name = "Shreyansh Vyas"
 
 [core]
   editor = nvim
+  pager = delta
+
+[interactive]
+  diffFilter = delta --color-only
+
+[delta]
+  navigate = true
+  dark = true
+  side-by-side = true
+  line-numbers = true
+
+[merge]
+  tool = nvim
+  conflictStyle = zdiff3
+
+[init]
+  defaultBranch = main
+
+[pull]
+  rebase = true
+
+[push]
+  rebase = true
+  autoSetupRemote = true
