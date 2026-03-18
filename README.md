@@ -1,11 +1,11 @@
-# ☠️.dotfiles
+# .dotfiles
 
 > My minimal dotfiles, organized with clarity.  
 > (pushed in a moment of confidence)
 
 Kinda don’t know why I pushed all of this stuff… whatever.
 
-So yeah — here are all my config files before I break them again.
+So yeah — here are all my config files before I break or do changes again.
 
 ---
 
