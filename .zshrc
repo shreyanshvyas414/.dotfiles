@@ -4,10 +4,10 @@
 # Auto Tmux (Alacritty Only)
 if command -v tmux >/dev/null 2>&1 && [[ -z "$TMUX" ]]; then
   if [[ "$TERM_PROGRAM" == "alacritty" || -n "$ALACRITTY_SOCKET" ]]; then
-    if ! tmux has-session -t main 2>/dev/null; then
-      tmux new-session -d -s main
+    if ! tmux has-session -t home 2>/dev/null; then
+      tmux new-session -d -s home
     fi
-    exec tmux attach -t main
+    exec tmux attach -t home
   fi
 fi
 
@@ -65,23 +65,18 @@ finder() {
 zle -N finder
 bindkey '^f' finder
 
-# Tree view
-lt() {
-  eza --tree --level=2 --icons
-}
-
-# Base eza wrapper
-e() { eza --icons --group-directories-first "$@"; }
 
 # Aliases
 
 # Core
 alias cd='z'
 alias cdi='zi'
-alias ls='e'
-alias ll='e -alh --git'
-alias la='e -a'
-alias l='e -lh'
+# Core
+alias pc="pbcopy"
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+alias dir='ls -a'
 alias cl='clear'
 alias cs='clear'
 alias cls='clear'
@@ -127,9 +122,10 @@ alias gt='git tag'
 alias bi='brew install'
 alias bu='brew uninstall'
 alias bl='brew list'
+alias bc='brew cleanup'
 
 # rust
-alias rn='cargo run'
+alias cr='cargo run'
 
 # tmux
 alias tls="tmux list-sessions"
@@ -170,6 +166,8 @@ KEYTIMEOUT=1
 
 # External Profile
 [[ -f /Users/shrey99sh/lua/.profile ]] && source /Users/shrey99sh/lua/.profile
+
+source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # FNM
 if command -v fnm >/dev/null 2>&1; then
@@ -231,7 +229,7 @@ arrow_color() {
   git rev-parse --is-inside-work-tree &>/dev/null && echo "%F{108}" || echo "%F{222}"
 }
 
-PROMPT='%F{13}%n %F{222}in $(dir_color)%2~%f$(git_prompt)
+PS1='%F{13}%n %F{222}in $(dir_color)%2~%f$(git_prompt)
 $(arrow_color)$ %f'
 
 time_color() {
@@ -263,4 +261,5 @@ RPROMPT='${CMD_DURATION}'
 #
 # killall SystemUIServer
 # killall Dock
-
+alias python="python3"
+alias pip="pip3"
