@@ -1,0 +1,164 @@
+# Alacritty Configuration - Unified Theme
+# Matches: Vague (nvim) + Tmux + Zsh prompt colors
+
+[font]
+size = 15
+
+[font.normal]
+family = "Maple Mono NF"
+style = "Regular"
+
+[window]
+opacity = 1
+decorations = "Buttonless"
+dynamic_padding = true
+option_as_alt = "Both"
+
+[window.dimensions]
+columns = 120
+lines = 50
+
+[window.padding]
+x = 2
+y = 2
+
+[env]
+TERM = "alacritty"
+
+# UNIFIED THEME - Matches Vague + Your Tmux/Zsh Colors 
+[colors.primary] 
+background = '#18191a' # Vague background 
+foreground = '#cdcdcd' # Vague foreground 
+
+[colors.cursor] 
+text = '#18191a' 
+cursor = '#f9e2af' # Yellow accent (matches tmux/zsh) 
+
+[colors.selection] 
+text = '#cdcdcd' 
+background = '#3c4048' # Normal colors - Muted, subtle palette 
+
+[colors.normal] 
+black = '#232425' 
+red = '#d2788c' # Soft red green = '#a6e3a1' # Your zsh green 
+yellow = '#f9e2af' # Your primary yellow 
+blue = '#94e2d5' # Your cyan 
+magenta = '#baa0f8' # Soft magenta 
+cyan = '#94e2d5' # Muted cyan 
+white = '#cdcdcd' # Bright colors - Slightly brighter versions 
+
+[colors.bright] 
+black = '#3c4048' 
+red = '#d2788c' 
+green = '#a6e3a1' 
+yellow = '#f9e2af' 
+blue = '#94e2d5' 
+magenta = '#baa0f8' 
+cyan = '#94e2d5' 
+white = '#e4e4e4'
+
+# # Catppuccin Mocha -
+#
+# [colors.primary]
+# background =  "#181825"  # base
+# foreground = '#cdd6f4'   # text
+#
+# [colors.cursor]
+# text = '#1e1e2e'
+# cursor = '#f9e2af'       # yellow accent
+#
+# [colors.selection]
+# text = '#cdd6f4'
+# background = '#313244'   # surface0
+#
+# [colors.normal]
+# black   = '#45475a'  # surface1
+# red     = '#f38ba8'
+# green   = '#a6e3a1'
+# yellow  = '#f9e2af'
+# blue    = '#89b4fa'
+# magenta = '#cba6f7'
+# cyan    = '#94e2d5'
+# white   = '#bac2de'  # subtext1
+#
+# [colors.bright]
+# black   = '#585b70'  # surface2
+# red     = '#f38ba8'
+# green   = '#a6e3a1'
+# yellow  = '#f9e2af'
+# blue    = '#89b4fa'
+# magenta = '#cba6f7'
+# cyan    = '#94e2d5'
+# white   = '#ffffff'
+#
+[scrolling]
+history = 100000
+multiplier = 3
+
+[cursor]
+style = "Block"
+unfocused_hollow = true
+
+[selection]
+save_to_clipboard = true
+
+[mouse]
+hide_when_typing = true
+
+# KEYBOARD BINDINGS - Aerospace Compatible
+[[keyboard.bindings]]
+key = "Space"
+mods = "Alt"
+chars = "\u001b[32;3u"
+
+[[keyboard.bindings]]
+action = "ResetFontSize"
+key = "Key0"
+mods = "Command"
+
+[[keyboard.bindings]]
+action = "IncreaseFontSize"
+key = "Equals"
+mods = "Command"
+
+[[keyboard.bindings]]
+action = "DecreaseFontSize"
+key = "Minus"
+mods = "Command"
+
+[[keyboard.bindings]]
+action = "Paste"
+key = "V"
+mods = "Command"
+
+[[keyboard.bindings]]
+action = "Copy"
+key = "C"
+mods = "Command"
+
+[[keyboard.bindings]]
+action = "Hide"
+key = "H"
+mods = "Command"
+
+[[keyboard.bindings]]
+action = "Quit"
+key = "Q"
+mods = "Command"
+
+[[keyboard.bindings]]
+action = "SpawnNewInstance"
+key = "N"
+mods = "Command"
+
+# Disable conflicts with Aerospace
+[[keyboard.bindings]]
+action = "None"
+key = "F"
+mods = "Command"
+
+# Clear screen
+[[keyboard.bindings]]
+chars = "\u000c"
+key = "K"
+mods = "Command"

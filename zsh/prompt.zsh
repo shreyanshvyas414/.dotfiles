@@ -1,15 +1,16 @@
 setopt PROMPT_SUBST
 
-# Colors
-MAGENTA='%F{13}'
-YELLOW='%F{222}'
-CYAN='%F{10}'
-RED='%F{9}'
-GRAY='%F{185}'
-GREEN='%F{2}'
+# Soothing colors (all from 1–12 range-ish)
+MAGENTA='%F{13}'     # username (keep, you like it)
+YELLOW='%F{222}'     # neutral UI (time, normal dirs)
+CYAN='%F{109}'       # git dirs (soft blue)
+GREEN='%F{108}'      # git branch (muted green)
+RED='%F{9}'          # errors ONLY
+GRAY='%F{222}'       # glue text (in, separators)
 RESET='%f'
 
-# Directory
+
+# Directory color logic
 dir_color() {
   if [[ $? -ne 0 ]]; then
     echo "$RED"
@@ -18,34 +19,34 @@ dir_color() {
   git rev-parse --is-inside-work-tree &>/dev/null && echo "$CYAN" || echo "$YELLOW"
 }
 
-# Git branch indicator
+# Git branch (icon + darker color only)
 git_prompt() {
   local branch
   branch=$(git symbolic-ref --short HEAD 2>/dev/null)
   if [[ -n $branch ]]; then
-    echo " ${RED}on ${CYAN}$branch${RESET}"
+    echo " ${GRAY} ${GREEN}$branch${RESET}"
   fi
 }
 
-# Git
+# Dynamic "in" color
 in_color() {
-  git rev-parse --is-inside-work-tree &>/dev/null && echo "$RED" || echo "$GRAY"
+  echo "$GRAY"
 }
 
-# Arrow
+# $ color
 arrow_color() {
-  git rev-parse --is-inside-work-tree &>/dev/null && echo "$RED" || echo "$GRAY"
+  git rev-parse --is-inside-work-tree &>/dev/null && echo "$CYAN" || echo "$GRAY"
 }
 
-# Timw
+# Time color
 time_color() {
-  git rev-parse --is-inside-work-tree &>/dev/null && echo "$RED" || echo "$GRAY"
+  echo "$YELLOW"
 }
 
-# Left
-PROMPT='${MAGENTA}%n $(in_color)in $(dir_color)%2~${RESET}$(git_prompt)
-$(arrow_color)❯${RESET} '
+# Left prompt (unchanged)
+PROMPT='${MAGENTA}%n ${GRAY}in $(dir_color)%2~${RESET}$(git_prompt)
+$(arrow_color)$ ${RESET}'
 
-# Right
-RPROMPT='$(time_color)%D{%I:%M %p}${RESET}'
+# Right prompt (unchanged)
+#RPROMPT='$(time_color)%D{%I:%M %p}${RESET}'
 

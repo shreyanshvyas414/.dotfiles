@@ -1,0 +1,2 @@
+[settings]
+neovim-args = ["--cmd", "set guifont=Maple\\ Mono\\ NF:h14"]
