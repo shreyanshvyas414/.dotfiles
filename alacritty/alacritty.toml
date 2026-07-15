@@ -157,8 +157,35 @@ action = "None"
 key = "F"
 mods = "Command"
 
+# ==========================================
+# LAYER 3: TERMINAL EMULATOR (Alacritty)
+# ==========================================
+
 # Clear screen
 [[keyboard.bindings]]
 chars = "\u000c"
 key = "K"
 mods = "Command"
+
+# Tmux Resize (Ctrl + Shift + Arrows)
+# (Passes through AeroSpace safely)
+[[keyboard.bindings]]
+key = "Up"
+mods = "Control|Shift"
+chars = "\u001b[1;6A"
+
+[[keyboard.bindings]]
+key = "Down"
+mods = "Control|Shift"
+chars = "\u001b[1;6B"
+
+[[keyboard.bindings]]
+key = "Right"
+mods = "Control|Shift"
+chars = "\u001b[1;6C"
+
+[[keyboard.bindings]]
+key = "Left"
+mods = "Control|Shift"
+chars = "\u001b[1;6D"
+
