@@ -7,7 +7,7 @@ set -euo pipefail
 
 SCRIPT_VERSION="1.1.0"
 
-# --- Versions & Paths
+# Versions & Paths 
 LUA_VERSION="5.5.0"
 LUA_SHA256="57ccc32bbbd005cab75bcc52444052535af691789dba2b9016d5c50640d68b3d"
 LUAROCKS_VERSION="3.13.0"
@@ -18,19 +18,20 @@ MANIFEST_DIR="$HOME/.local/share/package-manifests"
 MANIFEST_FILE="$MANIFEST_DIR/$INSTALL_NAME.manifest"
 BUILD_DIR=$(mktemp -d /tmp/lua-build.XXXXXXXXXX)
 
-# --- Colors
+# Colors
 RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; NC='\033[0m'
 log_info()  { echo -e "${GREEN}[INFO]${NC}  $1"; }
 log_warn()  { echo -e "${YELLOW}[WARN]${NC}  $1"; }
 log_error() { echo -e "${RED}[ERROR]${NC} $1"; }
 
-# --- Helpers
+# Helpers
 mkdir -p "$MANIFEST_DIR"
 
 add_to_manifest() { echo "$1" >> "$MANIFEST_FILE"; }
 
 is_installed() { [ -f "$MANIFEST_FILE" ]; }
 
+# cleanup_on_error is armed inside install_lua only — other paths never touch it
 INSTALL_OK=1  # default safe; install_lua resets to 0 before build starts
 cleanup_on_error() {
     if [[ "$INSTALL_OK" -eq 0 ]]; then
@@ -39,7 +40,7 @@ cleanup_on_error() {
     fi
 }
 
-# --- Uninstall
+# Uninstall
 uninstall() {
     if ! is_installed; then
         log_error "$INSTALL_NAME is not installed (no manifest found)"
@@ -67,7 +68,7 @@ uninstall() {
     exit 0
 }
 
-# --- Install
+# Install
 install_lua() {
     # Arm the error trap for this path only
     INSTALL_OK=0
@@ -88,7 +89,7 @@ install_lua() {
         exit 0
     fi
 
-    # --- Init manifest
+    # Init manifest
     { echo "# Manifest for $INSTALL_NAME"
       echo "# Created: $(date)"
     } > "$MANIFEST_FILE"
@@ -96,7 +97,7 @@ install_lua() {
     mkdir -p "$LUA_DIR"
     add_to_manifest "$LUA_DIR"
 
-    # --- Lua
+    # Lua
     cd "$BUILD_DIR"
 
     log_info "Downloading Lua ${LUA_VERSION}…"
@@ -120,7 +121,7 @@ install_lua() {
         add_to_manifest "$LUA_DIR/$p"
     done
 
-    # --- Profile
+    # Profile
     cat > "$LUA_DIR/.profile" << EOF
 # Lua ${LUA_VERSION} environment
 export PATH=${LUA_DIR}/bin:\${PATH:-}
@@ -141,7 +142,7 @@ EOF
     # shellcheck source=/dev/null
     source "$LUA_DIR/.profile"
 
-    # --- LuaRocks
+    # LuaRocks
     cd "$BUILD_DIR"
 
     log_info "Downloading LuaRocks ${LUAROCKS_VERSION}…"
@@ -161,7 +162,7 @@ EOF
     add_to_manifest "$LUA_DIR/bin/luarocks-admin"
     add_to_manifest "$LUA_DIR/etc/luarocks"
 
-    # --- LuaJIT
+    # LuaJIT
     cd "$BUILD_DIR"
 
     log_info "Cloning LuaJIT…"
@@ -178,7 +179,7 @@ EOF
 
     add_to_manifest "$LUA_DIR/bin/luajit"
 
-    # --- luasec
+    # luasec (optional)
     OPENSSL_PATH=""
     for candidate in /opt/homebrew/opt/openssl@3 /opt/homebrew/opt/openssl \
                      /usr/local/opt/openssl@3  /usr/local/opt/openssl; do
@@ -195,11 +196,11 @@ EOF
         log_warn "OpenSSL not found — skipping luasec. Install via: brew install openssl@3"
     fi
 
-    # --- Summary
+    # Summary
+    log_info "============================="
     log_info ""
-    log_info ""
-    log_info "  Installation complete "
-    log_info ""
+    log_info "  Installation complete"
+    log_info "============================="
     lua -v
     luarocks --version
     luajit -v
@@ -220,7 +221,7 @@ EOF
                             || log_info "Build files left at $BUILD_DIR"
 }
 
-# --- Status
+# Status
 check_status() {
     if ! is_installed; then log_warn "$INSTALL_NAME is not installed"; exit 0; fi
 
@@ -233,7 +234,7 @@ check_status() {
     [ -x "$LUA_DIR/bin/luajit"    ] && "$LUA_DIR/bin/luajit"    -v
 }
 
-# --- Entry point
+# Entry point
 case "${1:-}" in
     --install|"")  install_lua    ;;
     --uninstall)   uninstall      ;;
