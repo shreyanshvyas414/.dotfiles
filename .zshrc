@@ -1,9 +1,9 @@
 # Interactive Shells Only
 [[ -o interactive ]] || return
 
-# Auto Tmux (Alacritty Only)
+# Auto Tmux (Ghostty Only)
 if command -v tmux >/dev/null 2>&1 && [[ -z "$TMUX" ]]; then
-  if [[ "$TERM_PROGRAM" == "alacritty" || -n "$ALACRITTY_SOCKET" ]]; then
+  if [[ "$TERM_PROGRAM" == "ghostty" || -n "$GHOSTTY_RESOURCES_DIR" ]]; then
     if ! tmux has-session -t home 2>/dev/null; then
       tmux new-session -d -s home
     fi

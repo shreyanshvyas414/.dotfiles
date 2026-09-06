@@ -2,8 +2,9 @@
 # Ported from the kitty config in ~/.config/kitty
 
 # ── Shell ──────────────────────────────────────────────────────────────
-command = /opt/homebrew/bin/fish
-shell-integration = fish
+# No `command` here on purpose: Ghostty launches the default login shell
+# (/bin/zsh), matching the old Alacritty setup. ~/.zshrc auto-attaches tmux.
+shell-integration = zsh
 shell-integration-features = no-cursor
 
 # ── Font ───────────────────────────────────────────────────────────────
