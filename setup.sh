@@ -2,7 +2,9 @@
 
 set -euo pipefail
 
-DOTFILES="$HOME/Documents/stuff/dots"
+# Repo root, derived from this script's location - works wherever the repo is
+# cloned. (The old hardcoded ~/Documents/stuff/dots path had gone stale.)
+DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 INSTALL_TOOLS=true
 DRY_RUN=false
 
@@ -37,10 +39,10 @@ run() {
 }
 
 echo ""
-log "Installing dotfiles..."
+log "Installing dotfiles from $DOTFILES"
 echo ""
 
-# Install tools (macOS)
+# Tools (macOS)
 if $INSTALL_TOOLS && [[ "$OSTYPE" == "darwin"* ]]; then
   log "Installing tools via Homebrew..."
 
@@ -49,123 +51,65 @@ if $INSTALL_TOOLS && [[ "$OSTYPE" == "darwin"* ]]; then
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   fi
 
-  tools=(tmux neovim fzf ripgrep fd git alacritty bob node starship)
-
-  for tool in "${tools[@]}"; do
-    if ! command -v "$tool" &>/dev/null; then
-      log "Installing $tool..."
-      if ! run brew install "$tool"; then
-        run brew install --cask "$tool" || warn "Failed to install $tool"
-      fi
-    fi
+  formulae=(tmux neovim fzf ripgrep fd git node bob eza bat btop yazi zoxide kanata fish)
+  for f in "${formulae[@]}"; do
+    command -v "$f" &>/dev/null || run brew install "$f" || warn "Failed: $f"
   done
 
-  # Nerd Font
-  run brew tap homebrew/cask-fonts
-  run brew install --cask font-fira-code-nerd-font || true
+  casks=(ghostty kitty)
+  for c in "${casks[@]}"; do
+    run brew install --cask "$c" || warn "Failed: $c"
+  done
+
+  # Maple Mono NF - the font both ghostty and kitty reference.
+  run brew install --cask font-maple-mono-nf || \
+    warn "font-maple-mono-nf unavailable; install Maple Mono NF manually"
 
   success "Tools installed"
   echo ""
 fi
 
-# Create directories
-log "Creating config directories..."
-run mkdir -p "$HOME/.config/alacritty"
-run mkdir -p "$HOME/.config/tmux"
-run mkdir -p "$HOME/.config/nvim"
-run mkdir -p "$HOME/.config/zsh"
-run mkdir -p "$HOME/Scripts"
-
 # Symlink helper
 install() {
-  local src="$1"
-  local dest="$2"
-  local name="$3"
+  local src="$1" dest="$2" name="$3"
 
   if [[ ! -e "$src" ]]; then
-    warn "Not found: $src"
+    warn "Not found, skipping: $src"
     return
   fi
 
-  # Backup existing real files
+  run mkdir -p "$(dirname "$dest")"
+
+  # Back up a real file/dir; replace a symlink outright
   if [[ -e "$dest" && ! -L "$dest" ]]; then
     run mv "$dest" "$dest.backup.$(date +%s)"
   fi
-
-  # Remove old symlink
   [[ -L "$dest" ]] && run rm "$dest"
 
-  run ln -sf "$src" "$dest"
+  run ln -sfn "$src" "$dest"
   success "$name"
 }
 
 log "Linking configs..."
 
-install "$DOTFILES/alacritty/alacritty.conf" \
-        "$HOME/.config/alacritty/alacritty.conf" \
-        "Alacritty"
+install "$DOTFILES/.zshrc"                 "$HOME/.zshrc"                          "Zsh"
+install "$DOTFILES/git/.gitconfig"         "$HOME/.gitconfig"                      "Git"
+install "$DOTFILES/ghostty/config"         "$HOME/.config/ghostty/config"          "Ghostty"
+install "$DOTFILES/kitty/kitty.conf"       "$HOME/.config/kitty/kitty.conf"        "Kitty"
+install "$DOTFILES/tmux/tmux.conf"         "$HOME/.config/tmux/tmux.conf"          "Tmux"
+install "$DOTFILES/fish"                   "$HOME/.config/fish"                    "Fish"
+install "$DOTFILES/nvim"                   "$HOME/.config/nvim"                    "Neovim"
+install "$DOTFILES/yazi"                   "$HOME/.config/yazi"                    "Yazi"
+install "$DOTFILES/aerospace/aerospace.toml" "$HOME/.config/aerospace/aerospace.toml" "AeroSpace"
+install "$DOTFILES/kanata/kanata.kbd"      "$HOME/.config/kanata/kanata.kbd"       "Kanata"
+install "$DOTFILES/btop/btop.conf"         "$HOME/.config/btop/btop.conf"          "btop"
+install "$DOTFILES/sketchybar"             "$HOME/.config/sketchybar"              "SketchyBar"
 
-install "$DOTFILES/git/.gitconfig" \
-        "$HOME/.gitconfig" \
-        "Git"
-
-install "$DOTFILES/tmux/.tmux.conf" \
-        "$HOME/.config/tmux/.tmux.conf" \
-        "Tmux"
-
-install "$DOTFILES/nvim" \
-        "$HOME/.config/nvim" \
-        "Neovim"
-
-install "$DOTFILES/zsh" \
-        "$HOME/.config/zsh" \
-        "Zsh config"
-
-install "$DOTFILES/starship/starship.toml" \
-        "$HOME/.config/starship.toml" \
-        "Starship"
-
-# .zshrc Setup
-if [[ ! -f "$HOME/.zshrc" ]]; then
-  log "Creating .zshrc..."
-
-  cat > "$HOME/.zshrc" <<'ZSHRC'
-# Auto-start tmux (Alacritty only)
-if command -v tmux &>/dev/null && [ -z "$TMUX" ]; then
-  if [ "$TERM_PROGRAM" = "alacritty" ] || [ "$ALACRITTY_SOCKET" ]; then
-    if ! tmux has-session -t main 2>/dev/null; then
-      tmux new-session -d -s main
-    fi
-    exec tmux attach -t main
-  fi
-fi
-
-# Modular Zsh config
-ZSH_CONFIG="$HOME/.config/zsh"
-for file in env cache aliases completion history options keybinds; do
-  [[ -f "$ZSH_CONFIG/$file.zsh" ]] && source "$ZSH_CONFIG/$file.zsh"
-done
-
-# Starship prompt
-if command -v starship &>/dev/null; then
-  eval "$(starship init zsh)"
-fi
-ZSHRC
-
-  success ".zshrc created"
-else
-  # Ensure starship init exists
-  if ! grep -q "starship init zsh" "$HOME/.zshrc"; then
-    log "Adding Starship init to existing .zshrc..."
-    echo -e '\n# Starship prompt\nif command -v starship &>/dev/null; then\n  eval "$(starship init zsh)"\nfi' >> "$HOME/.zshrc"
-    success "Starship added to .zshrc"
-  fi
-fi
-
-# Scripts
-if [[ -d "$DOTFILES/Scripts" ]]; then
+# Scripts (repo dir is lowercase)
+if [[ -d "$DOTFILES/scripts" ]]; then
   log "Installing scripts..."
-  for script in "$DOTFILES/Scripts"/*; do
+  run mkdir -p "$HOME/Scripts"
+  for script in "$DOTFILES/scripts"/*; do
     [[ -f "$script" ]] || continue
     dest="$HOME/Scripts/$(basename "$script")"
     run ln -sf "$script" "$dest"
@@ -174,11 +118,17 @@ if [[ -d "$DOTFILES/Scripts" ]]; then
   success "Scripts"
 fi
 
-# Neovim Setup
+# Neovim plugins - this config uses the built-in vim.pack, not lazy.nvim
 if command -v nvim &>/dev/null && ! $DRY_RUN; then
-  log "Installing Neovim plugins..."
-  nvim --headless "+Lazy! sync" +qa || true
-  success "Neovim plugins installed"
+  log "Syncing Neovim plugins (vim.pack)..."
+  nvim --headless "+lua vim.pack.update()" +qa || warn "vim.pack sync failed"
+  success "Neovim plugins synced"
+fi
+
+# Yazi flavors declared in yazi/package.toml (vague.yazi is tracked in-repo)
+if command -v ya &>/dev/null && ! $DRY_RUN; then
+  log "Installing yazi packages..."
+  ya pkg install || warn "ya pkg install failed"
 fi
 
 echo ""
@@ -186,6 +136,6 @@ success "Done!"
 echo ""
 log "Next steps:"
 echo "  1. Restart terminal: exec zsh"
-echo "  2. Test Neovim: nvim"
-echo "  3. Test Tmux: tmux"
+echo "  2. Grant Ghostty Accessibility permission for the cmd+\` quick terminal"
+echo "  3. Kanata needs a cmd_allowed build for its (cmd ...) aliases"
 echo ""

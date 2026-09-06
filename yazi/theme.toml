@@ -1,0 +1,10 @@
+# Colors live in the selected flavor under flavors/.
+# Anything set here overrides the flavor, so keep this file for personal
+# tweaks only - a stray key here silently wins over the whole flavor.
+
+[flavor]
+# Installed via `ya pkg add melindachang/kanagawa-paper`; `ya pkg upgrade`
+# keeps it current. Switch to "vague" for the local flavor built from this
+# machine's kitty + fish-prompt palette (flavors/vague.yazi).
+dark  = "kanagawa-paper"
+light = "kanagawa-paper"

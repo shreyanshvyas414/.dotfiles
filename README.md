@@ -11,13 +11,14 @@ So yeah — here are all my config files before I break or do changes again.
 
 ## Stack
 
-Keyboard Remapper    => Kanata / Karabiner  
+Keyboard Remapper    => Kanata  
 Window Manager       => Aerospace  
-Terminal Emulator    => Alacritty  
+Terminal Emulator    => Ghostty (Kitty as backup)  
 Code Editor          => Neovim (vimpack)  
 Menubar (?)          => Sketchybar (replacement of the thing Apple calls a menubar)  
 Multiplexer          => Tmux  
-Shell                => ZSH  
+Shell                => ZSH (Fish configured too)  
+File Manager         => Yazi  
 
 ---
 

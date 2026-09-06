@@ -1,0 +1,7 @@
+[plugin]
+deps = []
+
+[[flavor.deps]]
+use = "melindachang/kanagawa-paper"
+rev = "7f3cd1d"
+hash = "3f84eceb475a9d1c1ea911d93a1d1898"

@@ -15,3 +15,11 @@ zsh/.zsh_history
 
 # Backups
 *.backup
+
+# Fish generated state (universal vars; paths are set in conf.d/00_path.fish)
+fish/fish_variables
+
+# Yazi packages installed via `ya pkg` - reinstallable from package.toml.
+# vague.yazi is hand-made (see theme.toml), so it is tracked.
+yazi/flavors/*
+!yazi/flavors/vague.yazi/
