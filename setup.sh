@@ -105,6 +105,16 @@ install "$DOTFILES/kanata/kanata.kbd"      "$HOME/.config/kanata/kanata.kbd"    
 install "$DOTFILES/btop/btop.conf"         "$HOME/.config/btop/btop.conf"          "btop"
 install "$DOTFILES/sketchybar"             "$HOME/.config/sketchybar"              "SketchyBar"
 
+# Ghostty cursor shaders (third-party, not vendored into this repo).
+# Cloned inside the repo and linked out, so the relative `shaders/` path in
+# ghostty/config resolves from either the repo or ~/.config/ghostty.
+if [[ ! -d "$DOTFILES/ghostty/shaders" ]]; then
+  log "Cloning ghostty cursor shaders..."
+  run git clone --depth 1 https://github.com/sahaj-b/ghostty-cursor-shaders \
+    "$DOTFILES/ghostty/shaders" || warn "shader clone failed; custom-shader will be inert"
+fi
+install "$DOTFILES/ghostty/shaders" "$HOME/.config/ghostty/shaders" "Ghostty shaders"
+
 # Scripts (repo dir is lowercase)
 if [[ -d "$DOTFILES/scripts" ]]; then
   log "Installing scripts..."

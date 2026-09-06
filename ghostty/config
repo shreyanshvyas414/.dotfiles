@@ -17,6 +17,14 @@ cursor-style-blink = false
 cursor-color = #f9e2af
 cursor-text = #18191a
 
+# Cursor trail, via github.com/sahaj-b/ghostty-cursor-shaders (MIT), cloned
+# into shaders/. Path is relative to this config file.
+#   cursor_warp  = Neovide-like (this one)
+#   cursor_tail  = closest port of kitty's `cursor_trail`
+#   cursor_sweep = shrinks from previous to current position
+# Trail color follows cursor-color above (the shader reads iCurrentCursorColor).
+custom-shader = shaders/cursor_warp.glsl
+
 # ── Window ─────────────────────────────────────────────────────────────
 window-save-state = never
 window-width = 120

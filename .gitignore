@@ -23,3 +23,7 @@ fish/fish_variables
 # vague.yazi is hand-made (see theme.toml), so it is tracked.
 yazi/flavors/*
 !yazi/flavors/vague.yazi/
+
+# Ghostty cursor shaders - third-party (MIT), cloned by setup.sh.
+# Un-ignore if you start tuning the CONFIGURATION consts inside them.
+ghostty/shaders/
