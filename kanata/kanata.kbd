@@ -38,7 +38,8 @@
 (defalias
   cap (tap-hold-release 200 200 esc (layer-while-held nav))
   
-  ala (cmd open -a Alacritty)
+  ;; Caps+q -> cmd+` -> toggles the Ghostty quick terminal (drop-down)
+  ala M-grv
   saf (cmd open -a Safari)
   fir (cmd open -a Firefox)
   tor (cmd open -a "Tor Browser")
@@ -46,7 +47,7 @@
   
   xco (cmd open -a Xcode)
   txt (cmd open -a TextEdit)
-  vim (cmd open -a Alacritty)
+  vim (cmd open -a Ghostty)
   
   not (cmd open -a Notes)
   rem (cmd open -a Reminders)

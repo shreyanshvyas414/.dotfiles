@@ -1,0 +1,95 @@
+# ~/.config/ghostty/config
+# Ported from the kitty config in ~/.config/kitty
+
+# ── Shell ──────────────────────────────────────────────────────────────
+command = /opt/homebrew/bin/fish
+shell-integration = fish
+shell-integration-features = no-cursor
+
+# ── Font ───────────────────────────────────────────────────────────────
+font-family = Maple Mono NF
+font-size = 15
+
+# ── Cursor ─────────────────────────────────────────────────────────────
+cursor-style = block
+cursor-style-blink = false
+cursor-color = #f9e2af
+cursor-text = #18191a
+
+# ── Window ─────────────────────────────────────────────────────────────
+window-save-state = never
+window-width = 120
+window-height = 50
+window-padding-x = 5
+window-padding-y = 5
+window-inherit-working-directory = true
+macos-titlebar-style = hidden
+macos-option-as-alt = true
+
+# ── Splits ─────────────────────────────────────────────────────────────
+split-divider-color = #3c4048
+unfocused-split-opacity = 0.92
+
+# ── Colors ─────────────────────────────────────────────────────────────
+background = #18191a
+foreground = #cdcdcd
+selection-background = #3c4048
+selection-foreground = #cdcdcd
+
+palette = 0=#232425
+palette = 1=#d2788c
+palette = 2=#a6e3a1
+palette = 3=#f9e2af
+palette = 4=#94e2d5
+palette = 5=#baa0f8
+palette = 6=#94e2d5
+palette = 7=#cdcdcd
+palette = 8=#3c4048
+palette = 9=#d2788c
+palette = 10=#a6e3a1
+palette = 11=#f9e2af
+palette = 12=#94e2d5
+palette = 13=#baa0f8
+palette = 14=#94e2d5
+palette = 15=#e4e4e4
+
+# ── Behavior ───────────────────────────────────────────────────────────
+scrollback-limit = 100000000
+copy-on-select = clipboard
+mouse-hide-while-typing = true
+confirm-close-surface = true
+
+# ── Keybinds: splits ───────────────────────────────────────────────────
+keybind = ctrl+alt+right=new_split:right
+keybind = ctrl+alt+left=new_split:left
+keybind = ctrl+alt+down=new_split:down
+keybind = ctrl+alt+up=new_split:up
+
+# Focus splits — deliberately NOT alt+arrow: tmux binds `-n M-Left/Right/Up/Down`
+# to select-pane, so Ghostty must let alt+arrow pass through to tmux.
+keybind = cmd+alt+left=goto_split:left
+keybind = cmd+alt+right=goto_split:right
+keybind = cmd+alt+up=goto_split:up
+keybind = cmd+alt+down=goto_split:down
+
+# Resize splits
+keybind = ctrl+alt+shift+left=resize_split:left,5
+keybind = ctrl+alt+shift+right=resize_split:right,5
+keybind = ctrl+alt+shift+up=resize_split:up,5
+keybind = ctrl+alt+shift+down=resize_split:down,5
+
+# Zoom the focused split (kitty's stack layout toggle)
+keybind = ctrl+alt+shift+l=toggle_split_zoom
+
+# ── Keybinds: tabs ─────────────────────────────────────────────────────
+keybind = ctrl+shift+t=new_tab
+
+# ── Quick terminal (drop-down) ─────────────────────────────────────────
+# Global hotkey needs Accessibility permission:
+#   System Settings > Privacy & Security > Accessibility > enable Ghostty
+keybind = global:cmd+grave_accent=toggle_quick_terminal
+quick-terminal-position = top
+quick-terminal-screen = mouse
+quick-terminal-animation-duration = 0.15
+quick-terminal-autohide = true
+quick-terminal-space-behavior = move
