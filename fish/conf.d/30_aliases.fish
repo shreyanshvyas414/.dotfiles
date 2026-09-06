@@ -18,6 +18,7 @@ alias vi='nvim'
 alias v='nvim'
 alias vim='nvim'
 alias vm='vim'
+alias nv="neovide"
 
 alias python="python3"
 alias py="python3"
@@ -65,3 +66,6 @@ alias token-ctx='token-ts ctx'
 alias token-search='token-ts search'
 alias token-structure='token-ts structure'
 alias token-ts='uvx --from "token-savior-recall[memory-vector]" ts'
+
+alias cld="claude"
+alias cldr="claude --resume"

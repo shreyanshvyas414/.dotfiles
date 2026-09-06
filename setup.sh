@@ -51,7 +51,7 @@ if $INSTALL_TOOLS && [[ "$OSTYPE" == "darwin"* ]]; then
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   fi
 
-  formulae=(tmux neovim fzf ripgrep fd git node bob eza bat btop yazi zoxide kanata fish)
+  formulae=(tmux neovim fzf ripgrep fd git node bob eza bat btop yazi zoxide kanata fish lazygit)
   for f in "${formulae[@]}"; do
     command -v "$f" &>/dev/null || run brew install "$f" || warn "Failed: $f"
   done
@@ -103,7 +103,15 @@ install "$DOTFILES/yazi"                   "$HOME/.config/yazi"                 
 install "$DOTFILES/aerospace/aerospace.toml" "$HOME/.config/aerospace/aerospace.toml" "AeroSpace"
 install "$DOTFILES/kanata/kanata.kbd"      "$HOME/.config/kanata/kanata.kbd"       "Kanata"
 install "$DOTFILES/btop/btop.conf"         "$HOME/.config/btop/btop.conf"          "btop"
-install "$DOTFILES/sketchybar"             "$HOME/.config/sketchybar"              "SketchyBar"
+# SketchyBar is retired: aerospace.toml no longer triggers it and
+# ~/.config/sketchybar is gone. Files kept in-repo; un-comment to revive.
+# install "$DOTFILES/sketchybar"           "$HOME/.config/sketchybar"              "SketchyBar"
+
+# tmux launcher pickers. tmux.conf calls these by absolute path
+# (~/.config/scripts/...), so the directory has to land there.
+install "$DOTFILES/scripts"                "$HOME/.config/scripts"                 "Scripts (tmux pickers)"
+install "$DOTFILES/ripgrep/rgrc"           "$HOME/.config/ripgrep/rgrc"            "ripgrep"
+install "$DOTFILES/links.tsv"              "$HOME/.config/links.tsv"               "Links"
 
 # Ghostty cursor shaders (third-party, not vendored into this repo).
 # Cloned inside the repo and linked out, so the relative `shaders/` path in

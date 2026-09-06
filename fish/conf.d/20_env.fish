@@ -9,3 +9,6 @@ set -gx WORKSPACE_ROOTS "$HOME/Documents/Work/chattypie"
 
 set -gx TS_BASH_COMPACT 1
 set -gx TS_BASH_REWRITE 1
+
+set -gx MANPAGER "nvim +Man!"
+set -gx RIPGREP_CONFIG_PATH "$HOME/.config/ripgrep/rgrc"
