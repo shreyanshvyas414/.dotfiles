@@ -61,9 +61,12 @@ if $INSTALL_TOOLS && [[ "$OSTYPE" == "darwin"* ]]; then
     run brew install --cask "$c" || warn "Failed: $c"
   done
 
-  # Maple Mono NF - the font both ghostty and kitty reference.
-  run brew install --cask font-maple-mono-nf || \
-    warn "font-maple-mono-nf unavailable; install Maple Mono NF manually"
+  # Fonts. GeistMono Nerd Font is what ghostty/config uses; the Nerd Font
+  # build matters because the zsh prompt draws the U+F618 git branch glyph.
+  # Maple Mono NF is still referenced by kitty.conf, so both are installed.
+  for f in font-geist-mono-nerd-font font-maple-mono-nf; do
+    run brew install --cask "$f" || warn "$f unavailable; install it manually"
+  done
 
   success "Tools installed"
   echo ""
