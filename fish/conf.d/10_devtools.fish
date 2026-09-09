@@ -31,4 +31,8 @@ if test -d $__android_sdk
     set -gx ANDROID_SDK_ROOT $__android_sdk
     fish_add_path $__android_sdk/platform-tools
     fish_add_path $__android_sdk/cmdline-tools/latest/bin
+    # emulator lives outside platform-tools and used to reach PATH only via a
+    # one-off `fish_add_path` recorded in fish_variables; declared here so it
+    # survives a fresh fish_variables.
+    test -d $__android_sdk/emulator; and fish_add_path $__android_sdk/emulator
 end
