@@ -1,30 +1,62 @@
 [user]
-    email = "vyasshreyansh71@gmail.com"
-    name = "Shreyansh Vyas"
+    name = Shreyansh Vyas
+    email = vyasshreyansh71@gmail.com
 
 [core]
-  editor = nvim
-  pager = delta
+    editor = nvim
+    pager = delta
 
 [interactive]
-  diffFilter = delta --color-only
+    diffFilter = delta --color-only
 
 [delta]
-  navigate = true
-  dark = true
-  side-by-side = true
-  line-numbers = true
+    navigate = true
+    side-by-side = true
+    line-numbers = true
+    syntax-theme = OneHalfDark
+    features = decorations
+	minus-style = "syntax #34272b"
+	minus-emph-style = "syntax #54373e"
+	plus-style = "syntax #2d372e"
+	plus-emph-style = "syntax #455a45"
+
+[delta "decorations"]
+    commit-decoration-style = yellow box ul
+    file-style = yellow
+    file-decoration-style = yellow ul
+    hunk-header-decoration-style = yellow box
 
 [merge]
-  tool = nvim
-  conflictStyle = zdiff3
+    tool = nvim
+    conflictStyle = zdiff3
+
+[diff]
+    colorMoved = default
 
 [init]
-  defaultBranch = main
+    defaultBranch = main
 
 [pull]
-  rebase = true
+    rebase = true
 
 [push]
-  rebase = true
-  autoSetupRemote = true
+    autoSetupRemote = true
+    followTags = true
+
+[fetch]
+    prune = true
+
+[rerere]
+    enabled = true
+
+[color]
+    ui = auto
+
+[help]
+    autocorrect = prompt
+[credential "https://github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential

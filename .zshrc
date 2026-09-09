@@ -158,6 +158,11 @@ alias token-search='token-ts search'
 alias token-structure='token-ts structure'
 alias token-ts='uvx --from "token-savior-recall[memory-vector]" ts'
 
+alias cl="claude"
+alias cldr="claude --resume"
+
+
+
 mkcd() {
   if [[ -z "$1" ]]; then
     echo "mkcd: missing directory name"
